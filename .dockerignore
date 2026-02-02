@@ -1,0 +1,50 @@
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Git
+.git
+.gitignore
+
+# Dependencies
+node_modules
+package-lock.json
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+
+# Testing
+test-results
+playwright-report
+
+# Documentation (include in image)
+# docs
+
+# Temp files
+temp
+tmp
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials (never include)
+*.json
+!package.json
+service-account.json
+credentials.json
+
+# Build
+dist
+build
