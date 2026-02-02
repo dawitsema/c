@@ -18,7 +18,7 @@ const DATEV_CONFIG = {
   url: process.env.DATEV_URL || 'https://unternehmen-online.datev.de',
   username: process.env.DATEV_USERNAME,
   password: process.env.DATEV_PASSWORD,
-  timeout: parseInt(process.env.UPLOAD_TIMEOUT_MS) || 60000,
+  timeout: parseInt(process.env.UPLOAD_TIMEOUT_MS, 10) || 60000,
   
   // Selectors (German UI)
   selectors: {
@@ -97,16 +97,17 @@ async function isLoggedIn(page) {
     // Wait for either login form or logged-in indicator
     await page.waitForLoadState('networkidle', { timeout: 5000 });
     
-    // Check for common logged-in indicators
-    const loggedIn = await page.evaluate(() => {
-      // Check for logout button, user menu, or dashboard elements
-      return !!(
-        document.querySelector('[href*="logout"]') ||
-        document.querySelector('.user-menu') ||
-        document.querySelector('[class*="dashboard"]') ||
-        document.querySelector('text=Willkommen')
-      );
-    });
+    // Check for common logged-in indicators using Playwright locators
+    const logoutLink = page.locator('[href*="logout"]');
+    const userMenu = page.locator('.user-menu');
+    const dashboard = page.locator('[class*="dashboard"]');
+    const welcome = page.locator('text=Willkommen');
+    
+    // Check if any logged-in indicator is visible
+    const loggedIn = await logoutLink.isVisible().catch(() => false) ||
+                     await userMenu.isVisible().catch(() => false) ||
+                     await dashboard.isVisible().catch(() => false) ||
+                     await welcome.isVisible().catch(() => false);
     
     return loggedIn;
   } catch (error) {

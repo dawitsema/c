@@ -136,27 +136,26 @@ async function downloadFileFromDrive(fileId, fileName) {
   const filePath = path.join(tempDir, fileName);
   const dest = fs.createWriteStream(filePath);
   
-  return new Promise(async (resolve, reject) => {
-    try {
-      const response = await drive.files.get(
-        { fileId, alt: 'media' },
-        { responseType: 'stream' }
-      );
-      
-      response.data
-        .on('end', () => {
-          console.log(`Download completed: ${fileName}`);
-          resolve(filePath);
-        })
-        .on('error', err => {
-          console.error('Error downloading file:', err);
-          reject(err);
-        })
-        .pipe(dest);
-        
-    } catch (error) {
-      reject(error);
-    }
+  return new Promise((resolve, reject) => {
+    drive.files.get(
+      { fileId, alt: 'media' },
+      { responseType: 'stream' }
+    )
+      .then(response => {
+        response.data
+          .on('end', () => {
+            console.log(`Download completed: ${fileName}`);
+            resolve(filePath);
+          })
+          .on('error', err => {
+            console.error('Error downloading file:', err);
+            reject(err);
+          })
+          .pipe(dest);
+      })
+      .catch(error => {
+        reject(error);
+      });
   });
 }
 

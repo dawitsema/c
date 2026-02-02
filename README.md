@@ -24,7 +24,7 @@ Gmail Inbox → Apps Script → Google Drive → Webhook Server → Playwright �
 
 ## Prerequisites
 
-- Node.js 16+ installed
+- Node.js 18+ installed
 - Google Workspace account with Apps Script access
 - DATEV Unternehmen online account
 - Server or Cloud Run instance to host the webhook server
